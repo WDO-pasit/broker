@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS `brokers`;
+
+CREATE TABLE `brokers`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL UNIQUE,
+  `description` longtext NOT NULL,
+  `logo_url` text NOT NULL,
+  `website` varchar(255) NOT NULL,
+  `broker_type` ENUM('cfd', 'bond', 'stock', 'crypto') NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO brokers (id, name, slug, description, logo_url, website, broker_type, created_at) VALUES
+(1,'ohm_broker','ohmslug','ohm_description \n--yes skips prompts using saved preferences or defaults. The default setup enables TypeScript, Tailwind CSS, ESLint, App Router, and Turbopack, with import alias @/*, and includes AGENTS.md (with a CLAUDE.md that references it) to guide coding agents to write up-to-date Next.js code.\nSystem requirements\nBefore you begin, make sure your development environment meets the following requirements:\nMinimum Node.js version: 20.9\nOperating systems: ','https://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpg','https://wdotech.com','bond','2026-04-19 14:54:35'),
+(2,'ohm_slop','ohmslop','ext.js supports modern browsers with zero configuration.\nChrome 111+\nEdge 111+\nFirefox 111+\nSafari 16.4+\nLearn more about browser support, including how to configure polyfills and target specific browsers.\nCreate with the CLI\nThe quickest way to create a new Next.js app is using create-next-app, which sets up everything automatically for you. To create a project, run:\npnpm\nnpm\nyarn\n','https://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpg','https://ohmcode.dev','bond','2026-04-19 15:02:29'),
+(3,'ohm code','ohmcode','https://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpghttps://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpghttps://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpghttps://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpghttps://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpg','https://cdn.pixabay.com/photo/2026/02/18/09/06/henning_w-nature-10130305_1280.jpg','https://ohmcode.dev','cfd','2026-04-19 15:03:03'),
+(4,'boxohm','box','คริปโทเคอร์เรนซี (Cryptocurrency) คือสินทรัพย์ดิจิทัลรูปแบบหนึ่งที่กระจายศูนย์ (Decentralized) ใช้งานโดยไม่ต้องผ่านตัวกลางอย่างธนาคาร โดยใช้เทคโนโลยีบล็อกเชน (Blockchain) ในการบันทึกและตรวจสอบธุรกรรม มีความปลอดภัยสูง สร้างขึ้นเพื่อเป็นสื่อกลางในการแลกเปลี่ยนมูลค่าในโลกดิจิทัล ซึ่งมีสกุลเงินหลักคือ Bitcoin และ Ethereum \nWikipedia\nWikipedia\n +2\nข้อมูลสำคัญเกี่ยวกับคริปโทเคอร์เรนซี\nลักษณะเด่น: เป็นสินทรัพย์ที่จับต้องไม่ได้ (Virtual Currency) ใช้การเข้ารหัส (Cryptography) เพื่อรับประกันความถูกต้องของการโอนทรัพย์และการสร้างหน่วยเงินใหม่\nการกระจายศูนย์: ไม่มีธนาคารกลางหรือรัฐบาลควบคุม ทำให้ธุรกรรมเกิดขึ้นโดยตรงระหว่างบุคคล (Peer-to-Peer)\nบล็อกเชน (Blockchain): เป็นบัญชีแยกประเภทแบบกระจาย (Distributed Ledger) ที่ทุกคนสามารถตรวจสอบได้และปลอมแปลงได้ยาก\nความผันผวน: ราคาส่วนใหญ่เกิดจากกลไกตลาด ความนิยม และความต้องการซื้อขาย ทำให้มีความเสี่ยงสูงในการลงทุน แต่ก็ให้ผลตอบแทนสูงเช่นกัน\nประเภทของคริปโต:\nCryptocurrency: ใช้เป็นสื่อกลางแลกเปลี่ยน เช่น Bitcoin (BTC), Litecoin (LTC)\nUtility Token: ใช้แลกรับบริการในระบบนิเวศ\nStablecoin: เหรียญที่มีมูลค่าคงที่อิงกับสินทรัพย์จริง เช่น USDT, USDC \nBitkub.com\nBitkub.com\n +4\nตัวอย่างคริปโทเคอร์เรนซี\n','https://media.istockphoto.com/id/1465618017/th/รูปถ่าย/นักธุรกิจนักลงทุนคิดก่อนซื้อการลงทุนในตลาดหุ้นโดยใช้สมาร์ทโฟนเพื่อวิเคราะห์ข้อมูลการซ.jpg?s=2048x2048&w=is&k=20&c=mJsDLeYkflRnZkrIhFHpjORe-kqut-7TjCWlmMfptDU=','https://ohmcode.dev','crypto','2026-04-19 16:41:48');

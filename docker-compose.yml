@@ -5,11 +5,19 @@ services:
     ports:
       - "9991:3001"
     volumes:
-      - ./backend:/app # 🌟 โยงโค้ดทั้งหมดเข้าไป แก้ปุ๊บ อัปเดตปั๊บ
-      - /app/node_modules # 🛡️ ป้องกัน node_modules ฝั่ง Mac ตีกับฝั่ง Linux ใน Container
-      - ./backend/data:/app/data # รักษา Database ไว้เหมือนเดิม
+      - ./backend:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
+      # 🌟 เชื่อมต่อกับ MariaDB (ค่าต้องตรงกับฝั่ง db_broker ด้านล่าง)
+      - DB_HOST=db_broker
+      - DB_USER=root
+      - DB_PASSWORD=12345678
+      - DB_DATABASE=brokerdb
+    depends_on:
+      - db_broker
+    networks:
+      - appnet
 
   frontend:
     build:
@@ -17,11 +25,48 @@ services:
     ports:
       - "9990:3000"
     volumes:
-      - ./frontend:/app # 🌟 โยงโค้ดหน้าบ้านเข้าไป
-      - /app/node_modules # 🛡️ ซ่อน node_modules
-      - /app/.next # 🛡️ ซ่อนไฟล์ build ไม่ให้รกเครื่อง Mac
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:9991/api
       - NODE_ENV=development
     depends_on:
       - backend
+    networks:
+      - appnet
+
+  phpmyadmin_broker:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_broker
+    ports:
+      - "9993:80"
+    environment:
+      PMA_HOST: db_broker
+      PMA_PORT: 3306
+    depends_on:
+      - db_broker
+    networks:
+      - appnet
+
+  db_broker:
+    image: mariadb:10.5
+    container_name: db_broker
+    restart: unless-stopped
+    # 🌟 เซตค่า Environment ตรงนี้แทนการใช้ไฟล์ภายนอก
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_DATABASE=brokerdb
+    ports:
+      - "3309:3306"
+    volumes:
+      - db_broker_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+    networks:
+      - appnet
+volumes:
+  db_broker_data:
+
+networks:
+  appnet:
+    driver: bridge
