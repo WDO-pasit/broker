@@ -7,20 +7,23 @@ export class BrokerService {
     const { name, slug, description, logo_url, website, broker_type } = data;
     
     // Check Unique Slug
-    const existing = await this.db.get('SELECT id FROM brokers WHERE slug = ?', [slug]);
-    if (existing) {
+    // เปลี่ยนจาก .get() เป็น .execute() แล้วเช็คว่ามีข้อมูลใน Array หรือไม่
+    const [existingRows] = await this.db.execute('SELECT id FROM brokers WHERE slug = ?', [slug]);
+    if (existingRows.length > 0) {
       const error = new Error('Slug นี้ถูกใช้งานแล้ว');
       error.statusCode = 409;
       throw error;
     }
 
-    const result = await this.db.run(
+    // เปลี่ยนจาก .run() เป็น .execute()
+    const [result] = await this.db.execute(
       `INSERT INTO brokers (name, slug, description, logo_url, website, broker_type) 
        VALUES (?, ?, ?, ?, ?, ?)`,
       [name, slug, description, logo_url, website, broker_type]
     );
 
-    return { id: result.lastID, ...data };
+    // ของ MySQL จะใช้ result.insertId แทน result.lastID ครับ
+    return { id: result.insertId, ...data };
   }
 
   async getBrokers(query) {
@@ -38,11 +41,19 @@ export class BrokerService {
     }
 
     sql += ' ORDER BY created_at DESC';
-    return await this.db.all(sql, params);
+    
+    // เปลี่ยนจาก .all() เป็น .query() แล้วครอบ [rows] เพื่อเอาแต่ข้อมูล
+    const [rows] = await this.db.query(sql, params);
+    return rows;
   }
 
   async getBrokerBySlug(slug) {
-    const broker = await this.db.get('SELECT * FROM brokers WHERE slug = ?', [slug]);
+    // เปลี่ยนจาก .get() เป็น .execute()
+    const [rows] = await this.db.execute('SELECT * FROM brokers WHERE slug = ?', [slug]);
+    
+    // .execute() ส่งกลับมาเป็น Array เสมอ เราเลยต้องเอาตำแหน่งที่ [0] มาใช้
+    const broker = rows[0]; 
+
     if (!broker) {
       const error = new Error('ไม่พบข้อมูล Broker');
       error.statusCode = 404;
