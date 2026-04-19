@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - "9991:3001"
+    volumes:
+      - ./backend:/app # 🌟 โยงโค้ดทั้งหมดเข้าไป แก้ปุ๊บ อัปเดตปั๊บ
+      - /app/node_modules # 🛡️ ป้องกัน node_modules ฝั่ง Mac ตีกับฝั่ง Linux ใน Container
+      - ./backend/data:/app/data # รักษา Database ไว้เหมือนเดิม
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "9990:3000"
+    volumes:
+      - ./frontend:/app # 🌟 โยงโค้ดหน้าบ้านเข้าไป
+      - /app/node_modules # 🛡️ ซ่อน node_modules
+      - /app/.next # 🛡️ ซ่อนไฟล์ build ไม่ให้รกเครื่อง Mac
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:9991/api
+      - NODE_ENV=development
+    depends_on:
+      - backend
